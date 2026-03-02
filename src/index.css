@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #262626;
+  background: #fafafa;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --app-background: #fafafa;
+  --app-text: #262626;
+  --card-border: #dbdbdb;
+  --meta-text: #8e8e8e;
+  --thread-text: #262626;
+  --action-icon: #262626;
+  --sheet-backdrop: rgba(0, 0, 0, 0.28);
+  --sheet-surface: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--app-background);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--app-background);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+textarea,
+button {
+  border-radius: 0;
+}
+
+@utility subtle-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.8) transparent;
+}
+
+@media (max-width: 640px) {
+  .subtle-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
