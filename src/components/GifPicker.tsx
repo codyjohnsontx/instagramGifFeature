@@ -30,8 +30,8 @@ function GifTile({
   return (
     <div className="group relative">
       <button
-        className={`w-full overflow-hidden rounded-xl border bg-white text-left transition ${
-          selected ? 'border-slate-900' : 'border-[var(--card-border)]'
+        className={`w-full overflow-hidden rounded-xl border bg-[#0f0f0f] text-left transition ${
+          selected ? 'border-white' : 'border-[var(--card-border)]'
         }`}
         type="button"
         onClick={onSelect}
@@ -42,7 +42,7 @@ function GifTile({
           placeholderClassName="aspect-square w-full rounded-none border-0 bg-slate-100 text-[11px] text-[var(--meta-text)]"
           src={gif.previewUrl ?? gif.url}
         />
-        <div className="border-t border-slate-100 px-2.5 py-2">
+        <div className="border-t border-[#262626] px-2.5 py-2">
           <p className="line-clamp-1 text-[11px] font-medium text-[var(--thread-text)]">
             {gif.title}
           </p>
@@ -99,18 +99,18 @@ export function GifPicker({
     <>
       <button
         aria-label="Close GIF picker backdrop"
-        className="fixed inset-0 z-30 bg-[var(--sheet-backdrop)] sm:bg-black/12"
+        className="fixed inset-0 z-30 bg-[var(--sheet-backdrop)]"
         type="button"
         onClick={onClose}
       />
       <div
         aria-label="Choose a GIF"
         aria-modal="true"
-        className="fixed inset-x-0 bottom-0 z-40 max-h-[78vh] rounded-t-3xl bg-[var(--sheet-surface)] shadow-[0_-12px_32px_rgba(0,0,0,0.18)] sm:absolute sm:inset-x-0 sm:bottom-[calc(100%+0.75rem)] sm:max-h-[27rem] sm:rounded-2xl sm:border sm:border-[var(--card-border)] sm:shadow-[0_12px_24px_rgba(0,0,0,0.12)]"
+        className="fixed inset-x-0 bottom-0 z-40 max-h-[78vh] rounded-t-3xl border-t border-[#262626] bg-[var(--sheet-surface)] shadow-[0_-12px_32px_rgba(0,0,0,0.35)] sm:absolute sm:inset-x-0 sm:bottom-[calc(100%+0.75rem)] sm:max-h-[27rem] sm:rounded-2xl sm:border sm:border-[#262626] sm:shadow-[0_12px_24px_rgba(0,0,0,0.32)]"
         role="dialog"
       >
-        <div className="border-b border-[var(--card-border)] px-4 pb-3 pt-2 sm:pt-3">
-          <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-200 sm:hidden" />
+        <div className="border-b border-[#262626] px-4 pb-3 pt-2 sm:pt-3">
+          <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[#3a3a3a] sm:hidden" />
           <div className="mb-3 flex items-start justify-between gap-3">
             <div>
               <h2 className="text-sm font-semibold text-[var(--app-text)]">Choose a GIF</h2>
@@ -120,7 +120,7 @@ export function GifPicker({
             </div>
             <button
               aria-label="Close GIF picker"
-              className="rounded-full p-1 text-[var(--meta-text)] transition hover:bg-slate-100 hover:text-[var(--app-text)]"
+              className="rounded-full p-1 text-[var(--meta-text)] transition hover:bg-white/8 hover:text-[var(--app-text)]"
               type="button"
               onClick={onClose}
             >
@@ -129,11 +129,11 @@ export function GifPicker({
           </div>
 
           <div className="flex items-center justify-between gap-3">
-            <div className="inline-flex rounded-lg bg-slate-100 p-1">
+            <div className="inline-flex rounded-lg bg-[#1c1c1c] p-1">
               <button
                 className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
                   activeTab === 'search'
-                    ? 'bg-white text-[var(--app-text)] shadow-sm'
+                    ? 'bg-[#2f2f2f] text-[var(--app-text)]'
                     : 'text-[var(--meta-text)]'
                 }`}
                 type="button"
@@ -144,7 +144,7 @@ export function GifPicker({
               <button
                 className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
                   activeTab === 'saved'
-                    ? 'bg-white text-[var(--app-text)] shadow-sm'
+                    ? 'bg-[#2f2f2f] text-[var(--app-text)]'
                     : 'text-[var(--meta-text)]'
                 }`}
                 type="button"
@@ -167,7 +167,7 @@ export function GifPicker({
               <label className="mb-3 block">
                 <span className="sr-only">Search GIFs</span>
                 <input
-                  className="w-full rounded-xl border border-[var(--card-border)] bg-white px-4 py-2.5 text-sm text-[var(--thread-text)] outline-none transition placeholder:text-[var(--meta-text)] focus:border-slate-400"
+                  className="w-full rounded-xl border border-[#262626] bg-[#0f0f0f] px-4 py-2.5 text-sm text-[var(--thread-text)] outline-none transition placeholder:text-[var(--meta-text)] focus:border-[#3b82f6]"
                   placeholder="Search"
                   type="text"
                   value={searchQuery}
@@ -176,7 +176,7 @@ export function GifPicker({
               </label>
 
               {filteredCatalog.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-[var(--card-border)] bg-slate-50 px-4 py-8 text-center text-sm text-[var(--meta-text)]">
+                <div className="rounded-xl border border-dashed border-[#262626] bg-[#0f0f0f] px-4 py-8 text-center text-sm text-[var(--meta-text)]">
                   No GIFs match your search
                 </div>
               ) : (
@@ -193,7 +193,7 @@ export function GifPicker({
               )}
             </>
           ) : savedGifs.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[var(--card-border)] bg-slate-50 px-4 py-8 text-center text-sm text-[var(--meta-text)]">
+            <div className="rounded-xl border border-dashed border-[#262626] bg-[#0f0f0f] px-4 py-8 text-center text-sm text-[var(--meta-text)]">
               Save GIFs you find in comments to reuse them here
             </div>
           ) : (

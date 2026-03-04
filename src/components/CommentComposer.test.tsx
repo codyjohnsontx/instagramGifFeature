@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import { seedPosts } from '../data/gifs'
+import { seedMyGifsStarter, seedPosts } from '../data/gifs'
 import { SavedGifsProvider } from '../context/SavedGifsContext'
 import { ToastProvider } from '../context/ToastContext'
 import { PostCard } from './PostCard'
@@ -16,7 +16,58 @@ function renderPostCard() {
   )
 }
 
+function renderTwoPostCards() {
+  return render(
+    <ToastProvider>
+      <SavedGifsProvider>
+        <div>
+          <PostCard post={seedPosts[0]} />
+          <PostCard post={seedPosts[1]} />
+        </div>
+      </SavedGifsProvider>
+    </ToastProvider>,
+  )
+}
+
 describe('CommentComposer flow', () => {
+  it('shows starter My GIFs immediately on a fresh render', async () => {
+    const user = userEvent.setup()
+    renderPostCard()
+
+    await user.click(screen.getByRole('button', { name: /open gif picker/i }))
+    await user.click(screen.getByRole('button', { name: /my gifs/i }))
+    const dialog = screen.getByRole('dialog', { name: /choose a gif/i })
+
+    expect(within(dialog).getByText('Standing ovation')).toBeInTheDocument()
+    expect(within(dialog).getByText('Mind blown')).toBeInTheDocument()
+  })
+
+  it('keeps My GIFs consistent across unrelated posts and updates both when one is changed', async () => {
+    const user = userEvent.setup()
+    renderTwoPostCards()
+
+    const openButtons = screen.getAllByRole('button', { name: /open gif picker/i })
+
+    await user.click(openButtons[0])
+    await user.click(screen.getByRole('button', { name: /my gifs/i }))
+    let dialog = screen.getByRole('dialog', { name: /choose a gif/i })
+    expect(within(dialog).getByText('Standing ovation')).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('button', {
+        name: `Remove ${seedMyGifsStarter[0].title} from My GIFs`,
+      }),
+    )
+    await user.click(screen.getByRole('button', { name: /close gif picker$/i }))
+
+    await user.click(openButtons[1])
+    await user.click(screen.getByRole('button', { name: /my gifs/i }))
+    dialog = screen.getByRole('dialog', { name: /choose a gif/i })
+
+    expect(within(dialog).queryByText('Standing ovation')).not.toBeInTheDocument()
+    expect(within(dialog).getByText('Mind blown')).toBeInTheDocument()
+  })
+
   it('selects a GIF, shows the preview, and posts a new comment', async () => {
     const user = userEvent.setup()
     renderPostCard()

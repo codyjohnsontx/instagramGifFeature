@@ -1,7 +1,22 @@
 import { describe, expect, it } from 'vitest'
-import { STORAGE_KEY, readSavedGifs, removeSavedGif, upsertSavedGif } from './storage'
+import { seedMyGifsStarter } from '../data/gifs'
+import {
+  STORAGE_KEY,
+  buildInitialSavedGifs,
+  readSavedGifs,
+  removeSavedGif,
+  upsertSavedGif,
+} from './storage'
 
 describe('storage utilities', () => {
+  it('returns starter seeded GIFs when no localStorage entry exists', () => {
+    const result = readSavedGifs()
+
+    expect(result.hadError).toBe(false)
+    expect(result.data).toHaveLength(seedMyGifsStarter.length)
+    expect(result.data.map((item) => item.id)).toEqual(seedMyGifsStarter.map((item) => item.id))
+  })
+
   it('reads valid saved GIF data from localStorage', () => {
     window.localStorage.setItem(
       STORAGE_KEY,
@@ -31,10 +46,10 @@ describe('storage utilities', () => {
   it('falls back safely when localStorage contains malformed JSON', () => {
     window.localStorage.setItem(STORAGE_KEY, '{"bad-json"')
 
-    expect(readSavedGifs()).toEqual({
-      data: [],
-      hadError: true,
-    })
+    const result = readSavedGifs()
+
+    expect(result.hadError).toBe(true)
+    expect(result.data.map((item) => item.id)).toEqual(seedMyGifsStarter.map((item) => item.id))
   })
 
   it('strips invalid entries from parsed storage data', () => {
@@ -67,6 +82,43 @@ describe('storage utilities', () => {
       ],
       hadError: false,
     })
+  })
+
+  it('respects an explicitly empty saved GIF array', () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify([]))
+
+    expect(readSavedGifs()).toEqual({
+      data: [],
+      hadError: false,
+    })
+  })
+
+  it('falls back to starter GIFs when stored entries are entirely invalid', () => {
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify([
+        {
+          id: 25,
+          title: 'Broken',
+          url: 10,
+          savedAt: 'bad',
+        },
+      ]),
+    )
+
+    const result = readSavedGifs()
+
+    expect(result.hadError).toBe(true)
+    expect(result.data.map((item) => item.id)).toEqual(seedMyGifsStarter.map((item) => item.id))
+  })
+
+  it('builds starter saved GIFs with stable newest-first ordering', () => {
+    const result = buildInitialSavedGifs(seedMyGifsStarter.slice(0, 3), 1000)
+
+    expect(result.map((item) => item.id)).toEqual(
+      seedMyGifsStarter.slice(0, 3).map((item) => item.id),
+    )
+    expect(result.map((item) => item.savedAt)).toEqual([1000, 999, 998])
   })
 
   it('inserts a new GIF when saving', () => {

@@ -51,7 +51,7 @@ export function CommentItem({ comment }: CommentItemProps) {
             aria-expanded={menuOpen}
             aria-haspopup="menu"
             aria-label="Open GIF actions"
-            className="rounded-full p-1 text-[var(--meta-text)] transition hover:bg-slate-100 hover:text-[var(--app-text)] sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
+            className="rounded-full p-1 text-[var(--meta-text)] transition hover:bg-white/8 hover:text-[var(--app-text)] sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
           >
@@ -93,7 +93,7 @@ export function CommentItem({ comment }: CommentItemProps) {
         </div>
       </div>
 
-      <div className="relative w-full max-w-[250px] overflow-hidden rounded-xl border border-[var(--card-border)]">
+      <div className="relative w-full max-w-[250px] overflow-hidden rounded-[14px] border border-[#262626] bg-[#0f0f0f]">
         {saved ? (
           <div className="absolute left-2 top-2 z-10 inline-flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-[11px] font-medium text-white">
             <BookmarkIcon className="h-3.5 w-3.5" filled />
@@ -103,7 +103,7 @@ export function CommentItem({ comment }: CommentItemProps) {
         <GifImage
           alt={comment.gif.title}
           className="aspect-[4/3] w-full object-cover"
-          placeholderClassName="aspect-[4/3] w-full rounded-none border-0 bg-slate-100 text-[var(--meta-text)]"
+          placeholderClassName="aspect-[4/3] w-full rounded-none border-0 bg-[#181818] text-[var(--meta-text)]"
           src={comment.gif.url}
         />
       </div>

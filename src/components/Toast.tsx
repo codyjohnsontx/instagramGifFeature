@@ -18,7 +18,7 @@ export function Toast({ toast, onDismiss }: ToastProps) {
       <div
         className={`pointer-events-auto flex items-center gap-3 rounded-md border px-3 py-2 text-sm font-medium shadow-[0_8px_20px_rgba(0,0,0,0.18)] ${
           toast.tone === 'error'
-            ? 'border-rose-200 bg-rose-50 text-rose-700'
+            ? 'border-[#5b2529] bg-[#2c1214] text-[#ffb4b8]'
             : 'border-[#363636] bg-[#262626] text-white'
         }`}
       >
@@ -27,7 +27,7 @@ export function Toast({ toast, onDismiss }: ToastProps) {
           aria-label="Dismiss toast"
           className={`rounded-sm px-1.5 py-0.5 text-[11px] ${
             toast.tone === 'error'
-              ? 'bg-rose-100 text-rose-700'
+              ? 'bg-white/8 text-[#ffb4b8]'
               : 'bg-white/10 text-white'
           }`}
           type="button"

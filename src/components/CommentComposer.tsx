@@ -50,12 +50,12 @@ export function CommentComposer({ onPost }: CommentComposerProps) {
   return (
     <div className="relative">
       {selectedGif ? (
-        <div className="mb-2 flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2">
-          <div className="h-11 w-11 overflow-hidden rounded-lg border border-[var(--card-border)]">
+        <div className="mb-2 flex items-center gap-3 rounded-xl bg-[#121212] px-3 py-2">
+          <div className="h-11 w-11 overflow-hidden rounded-lg border border-[#262626]">
             <GifImage
               alt={selectedGif.title}
               className="h-full w-full object-cover"
-              placeholderClassName="h-full min-h-0 w-full rounded-none border-0 bg-slate-100 px-2 py-3 text-[10px] text-[var(--meta-text)]"
+              placeholderClassName="h-full min-h-0 w-full rounded-none border-0 bg-[#181818] px-2 py-3 text-[10px] text-[var(--meta-text)]"
               src={selectedGif.previewUrl ?? selectedGif.url}
             />
           </div>
@@ -69,7 +69,7 @@ export function CommentComposer({ onPost }: CommentComposerProps) {
           </div>
           <button
             aria-label="Clear selected GIF"
-            className="rounded-full p-1 text-[var(--meta-text)] transition hover:bg-slate-200 hover:text-[var(--app-text)]"
+            className="rounded-full p-1 text-[var(--meta-text)] transition hover:bg-white/8 hover:text-[var(--app-text)]"
             type="button"
             onClick={() => setSelectedGif(undefined)}
           >
@@ -83,8 +83,8 @@ export function CommentComposer({ onPost }: CommentComposerProps) {
           aria-label="Open GIF picker"
           className={`rounded-full border px-3 py-2 text-sm font-semibold transition ${
             pickerOpen
-              ? 'border-slate-900 bg-slate-900 text-white'
-              : 'border-[var(--card-border)] bg-white text-[#0095f6] hover:bg-slate-50'
+              ? 'border-white bg-white text-black'
+              : 'border-[#363636] bg-black text-[#0095f6] hover:bg-[#0f0f0f]'
           }`}
           type="button"
           onClick={() => setPickerOpen((current) => !current)}

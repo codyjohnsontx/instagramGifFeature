@@ -61,14 +61,14 @@ export function PopoverMenu({
   return (
     <div
       ref={menuRef}
-      className="absolute right-0 top-8 z-20 min-w-40 overflow-hidden rounded-lg border border-[var(--card-border)] bg-white py-1 shadow-[0_8px_20px_rgba(0,0,0,0.12)]"
+      className="absolute right-0 top-8 z-20 min-w-40 overflow-hidden rounded-xl border border-[#262626] bg-[#1c1c1c] py-1 shadow-[0_8px_20px_rgba(0,0,0,0.32)]"
       role="menu"
     >
       {actions.map((action) => (
         <button
           key={action.label}
-          className={`flex w-full items-center px-3 py-2 text-left text-sm transition hover:bg-slate-50 ${
-            action.destructive ? 'text-rose-600' : 'text-[var(--thread-text)]'
+          className={`flex w-full items-center px-3 py-2 text-left text-sm transition hover:bg-white/8 ${
+            action.destructive ? 'text-[#ff6b75]' : 'text-[var(--thread-text)]'
           }`}
           role="menuitem"
           type="button"

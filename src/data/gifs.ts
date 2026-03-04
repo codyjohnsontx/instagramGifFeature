@@ -1,4 +1,4 @@
-import type { GifItem, PostItem } from '../types'
+import type { GifItem, PostItem, StoryItem } from '../types'
 
 export const seedGifCatalog: GifItem[] = [
   {
@@ -242,6 +242,57 @@ export const seedPosts: PostItem[] = [
       },
     ],
   },
+]
+
+export const seedStories: StoryItem[] = [
+  {
+    id: 'story-rachelle',
+    name: 'rachelle_g',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=320&q=80',
+  },
+  {
+    id: 'story-booboo',
+    name: 'booboo_k',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=320&q=80',
+  },
+  {
+    id: 'story-tj',
+    name: 'tjtuttle43',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=320&q=80',
+  },
+  {
+    id: 'story-superman',
+    name: 'superman_ed',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=320&q=80',
+  },
+  {
+    id: 'story-alek',
+    name: 'aleksalaz',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=320&q=80',
+  },
+  {
+    id: 'story-allison',
+    name: 'allison.p',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=320&q=80',
+    seen: true,
+  },
+]
+
+export const seedMyGifsStarter: GifItem[] = [
+  applause,
+  mindBlown,
+  chefKiss,
+  thumbsUp,
+  party,
+  thisOne,
+  laughing,
+  heartEyes,
 ]
 
 export const overflowGifFixtures: GifItem[] = [

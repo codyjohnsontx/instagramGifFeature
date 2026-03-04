@@ -1,7 +1,10 @@
 import { useEffect, useEffectEvent } from 'react'
 import { Feed } from './components/Feed'
+import { CameraIcon, HeartIcon, MessagesIcon } from './components/Icons'
+import { Sidebar } from './components/Sidebar'
+import { StoriesBar } from './components/StoriesBar'
 import { Toast } from './components/Toast'
-import { seedPosts } from './data/gifs'
+import { seedPosts, seedStories } from './data/gifs'
 import { SavedGifsProvider } from './context/SavedGifsContext'
 import { ToastProvider } from './context/ToastContext'
 import { useSavedGifs } from './context/useSavedGifs'
@@ -22,32 +25,63 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-[var(--app-background)] text-[var(--app-text)]">
-      <header className="sticky top-0 z-30 border-b border-[var(--card-border)] bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-15 max-w-[975px] items-center justify-between px-4 sm:px-6">
-          <div className='font-["Snell_Roundhand","Segoe_Script",cursive] text-3xl leading-none text-slate-950'>
-            Social
+      <header className="sticky top-0 z-30 border-b border-[#262626] bg-black/95 backdrop-blur lg:hidden">
+        <div className="mx-auto flex h-14 max-w-[640px] items-center justify-between px-4">
+          <button className="text-white" type="button">
+            <CameraIcon className="h-6 w-6" />
+          </button>
+          <div className="instagram-wordmark text-white">
+            Instagram
           </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-2 rounded-full border border-[var(--card-border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--meta-text)] sm:flex">
-              <span className="text-[var(--app-text)]">My GIFs</span>
-              <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[11px] text-white">
-                {savedGifs.length}
-              </span>
-            </div>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--card-border)] bg-white text-xs font-semibold text-slate-700">
-              SG
-            </div>
+          <div className="flex items-center gap-4 text-white">
+            <button aria-label="Notifications" type="button">
+              <HeartIcon className="h-6 w-6" />
+            </button>
+            <button aria-label="Messages" className="relative" type="button">
+              <MessagesIcon className="h-6 w-6" />
+              {savedGifs.length > 0 ? (
+                <span className="absolute -right-1 -top-1 rounded-full bg-[#ff3040] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white">
+                  {savedGifs.length}
+                </span>
+              ) : null}
+            </button>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto flex min-h-[calc(100vh-3.75rem)] max-w-[975px] flex-col">
-        <main className="mx-auto w-full max-w-[470px] pb-18 pt-3 sm:pt-8">
-          <div className="mb-4 px-4 text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--meta-text)] sm:hidden">
-            My GIFs: {savedGifs.length}
+      <div className="mx-auto flex min-h-screen max-w-[1260px]">
+        <Sidebar />
+
+        <main className="min-w-0 flex-1 px-0 pb-18 pt-3 lg:px-8 lg:pt-8">
+          <div className="mx-auto max-w-[630px]">
+            <StoriesBar items={seedStories} />
+            <Feed posts={seedPosts} />
           </div>
-          <Feed posts={seedPosts} />
         </main>
+
+        <div className="hidden xl:block xl:w-[320px]" />
+      </div>
+
+      <div className="fixed bottom-6 right-6 z-20 hidden rounded-full border border-[#262626] bg-[#1a1d24] px-5 py-4 shadow-[0_10px_32px_rgba(0,0,0,0.4)] xl:flex xl:items-center xl:gap-4">
+        <div className="relative text-white">
+          <MessagesIcon className="h-7 w-7" />
+          <span className="absolute -right-1 -top-1 rounded-full bg-[#ff3040] px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+            9+
+          </span>
+        </div>
+        <div>
+          <p className="text-2xl font-semibold text-white">Messages</p>
+        </div>
+        <div className="flex -space-x-2">
+          {seedStories.slice(0, 3).map((story) => (
+            <img
+              key={story.id}
+              alt={story.name}
+              className="h-8 w-8 rounded-full border-2 border-[#1a1d24] object-cover"
+              src={story.avatarUrl}
+            />
+          ))}
+        </div>
       </div>
 
       <Toast toast={toast} onDismiss={dismissToast} />

@@ -29,6 +29,13 @@ export type PostItem = {
   comments: CommentItem[]
 }
 
+export type StoryItem = {
+  id: string
+  name: string
+  avatarUrl: string
+  seen?: boolean
+}
+
 export type ToastMessage = {
   id: string
   message: string

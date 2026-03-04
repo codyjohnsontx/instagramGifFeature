@@ -1,3 +1,4 @@
+import { seedMyGifsStarter } from '../data/gifs'
 import type { GifItem, SavedGifItem } from '../types'
 
 export const STORAGE_KEY = 'my_gifs_saved_v1'
@@ -25,28 +26,51 @@ function sortSavedGifs(items: SavedGifItem[]) {
   return [...items].sort((left, right) => right.savedAt - left.savedAt)
 }
 
+export function buildInitialSavedGifs(
+  seed: GifItem[],
+  now = Date.now(),
+): SavedGifItem[] {
+  return sortSavedGifs(
+    seed.slice(0, MAX_SAVED_GIFS).map((gif, index) => ({
+      ...gif,
+      savedAt: now - index,
+    })),
+  )
+}
+
 export function readSavedGifs(): { data: SavedGifItem[]; hadError: boolean } {
+  const initialSavedGifs = buildInitialSavedGifs(seedMyGifsStarter)
+
   if (typeof window === 'undefined') {
-    return { data: [], hadError: false }
+    return { data: initialSavedGifs, hadError: false }
   }
 
   try {
     const rawValue = window.localStorage.getItem(STORAGE_KEY)
 
-    if (!rawValue) {
-      return { data: [], hadError: false }
+    if (rawValue === null) {
+      return { data: initialSavedGifs, hadError: false }
     }
 
     const parsed = JSON.parse(rawValue)
 
     if (!Array.isArray(parsed)) {
-      return { data: [], hadError: true }
+      return { data: initialSavedGifs, hadError: true }
+    }
+
+    if (parsed.length === 0) {
+      return { data: [], hadError: false }
     }
 
     const data = sortSavedGifs(parsed.filter(isSavedGifItem))
+
+    if (data.length === 0) {
+      return { data: initialSavedGifs, hadError: true }
+    }
+
     return { data, hadError: false }
   } catch {
-    return { data: [], hadError: true }
+    return { data: initialSavedGifs, hadError: true }
   }
 }
 
