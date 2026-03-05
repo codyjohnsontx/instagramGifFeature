@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useEffect, useRef, useState } from 'react'
 import type { GifItem } from '../types'
 import {
   readSavedGifs,
@@ -19,6 +19,11 @@ function getInitialState() {
 
 export function SavedGifsProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState(getInitialState)
+  const savedGifsRef = useRef(state.savedGifs)
+
+  useEffect(() => {
+    savedGifsRef.current = state.savedGifs
+  }, [state.savedGifs])
 
   useEffect(() => {
     writeSavedGifs(state.savedGifs)
@@ -27,35 +32,35 @@ export function SavedGifsProvider({ children }: PropsWithChildren) {
   const isSaved = (gifId: string) => state.savedGifs.some((item) => item.id === gifId)
 
   const saveGif = (gif: GifItem) => {
-    let result = { saved: false, removedOldest: false }
+    const nextResult = upsertSavedGif(savedGifsRef.current, gif)
 
-    setState((currentState) => {
-      const nextResult = upsertSavedGif(currentState.savedGifs, gif)
-      result = { saved: nextResult.saved, removedOldest: nextResult.removedOldest }
+    if (!nextResult.saved) {
+      return { saved: false, removedOldest: false }
+    }
 
-      return {
-        ...currentState,
-        savedGifs: nextResult.items,
-      }
-    })
+    savedGifsRef.current = nextResult.items
+    setState((currentState) => ({
+      ...currentState,
+      savedGifs: nextResult.items,
+    }))
 
-    return result
+    return { saved: true, removedOldest: nextResult.removedOldest }
   }
 
   const removeGif = (gifId: string) => {
-    let removed = false
+    const nextResult = removeSavedGifFromStorage(savedGifsRef.current, gifId)
 
-    setState((currentState) => {
-      const nextResult = removeSavedGifFromStorage(currentState.savedGifs, gifId)
-      removed = nextResult.removed
+    if (!nextResult.removed) {
+      return false
+    }
 
-      return {
-        ...currentState,
-        savedGifs: nextResult.items,
-      }
-    })
+    savedGifsRef.current = nextResult.items
+    setState((currentState) => ({
+      ...currentState,
+      savedGifs: nextResult.items,
+    }))
 
-    return removed
+    return true
   }
 
   return (

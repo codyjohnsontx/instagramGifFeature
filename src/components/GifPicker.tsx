@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import type { GifItem, GifPickerTab, SavedGifItem } from '../types'
 import { GifImage } from './GifImage'
-import { CloseIcon } from './Icons'
+import { BookmarkIcon, CloseIcon } from './Icons'
 
 type GifPickerProps = {
   catalog: GifItem[]
   savedGifs: SavedGifItem[]
+  isSaved: (gifId: string) => boolean
   activeTab: GifPickerTab
   selectedGifId?: string
   searchQuery: string
@@ -13,18 +14,22 @@ type GifPickerProps = {
   onTabChange: (tab: GifPickerTab) => void
   onSearchQueryChange: (query: string) => void
   onSelectGif: (gif: GifItem) => void
-  onRemoveSavedGif: (gifId: string) => void
+  onToggleSaveGif: (gif: GifItem) => void
 }
 
 function GifTile({
   gif,
   selected,
+  saved,
   onSelect,
+  onToggleSave,
   onRemove,
 }: {
   gif: GifItem
   selected: boolean
+  saved?: boolean
   onSelect: () => void
+  onToggleSave?: () => void
   onRemove?: () => void
 }) {
   return (
@@ -48,6 +53,27 @@ function GifTile({
           </p>
         </div>
       </button>
+      {onToggleSave ? (
+        <button
+          aria-label={
+            saved
+              ? `Remove ${gif.title} from My GIFs`
+              : `Save ${gif.title} to My GIFs`
+          }
+          className={`absolute left-2 top-2 rounded-full border p-1 text-white transition ${
+            saved
+              ? 'border-[#3b82f6] bg-[#1d4ed8]'
+              : 'border-white/30 bg-black/60 hover:bg-black/75'
+          }`}
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation()
+            onToggleSave()
+          }}
+        >
+          <BookmarkIcon className="h-3.5 w-3.5" filled={Boolean(saved)} />
+        </button>
+      ) : null}
       {onRemove ? (
         <button
           aria-label={`Remove ${gif.title} from My GIFs`}
@@ -68,6 +94,7 @@ function GifTile({
 export function GifPicker({
   catalog,
   savedGifs,
+  isSaved,
   activeTab,
   selectedGifId,
   searchQuery,
@@ -75,7 +102,7 @@ export function GifPicker({
   onTabChange,
   onSearchQueryChange,
   onSelectGif,
-  onRemoveSavedGif,
+  onToggleSaveGif,
 }: GifPickerProps) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -185,8 +212,10 @@ export function GifPicker({
                     <GifTile
                       key={gif.id}
                       gif={gif}
+                      saved={isSaved(gif.id)}
                       selected={selectedGifId === gif.id}
                       onSelect={() => onSelectGif(gif)}
+                      onToggleSave={() => onToggleSaveGif(gif)}
                     />
                   ))}
                 </div>
@@ -202,8 +231,9 @@ export function GifPicker({
                 <GifTile
                   key={gif.id}
                   gif={gif}
+                  saved
                   selected={selectedGifId === gif.id}
-                  onRemove={() => onRemoveSavedGif(gif.id)}
+                  onRemove={() => onToggleSaveGif(gif)}
                   onSelect={() => onSelectGif(gif)}
                 />
               ))}

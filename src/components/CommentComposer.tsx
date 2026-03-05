@@ -12,7 +12,7 @@ type CommentComposerProps = {
 }
 
 export function CommentComposer({ onPost }: CommentComposerProps) {
-  const { removeGif, savedGifs } = useSavedGifs()
+  const { isSaved, removeGif, saveGif, savedGifs } = useSavedGifs()
   const { showToast } = useToast()
   const [text, setText] = useState('')
   const [selectedGif, setSelectedGif] = useState<GifItem | undefined>()
@@ -41,10 +41,26 @@ export function CommentComposer({ onPost }: CommentComposerProps) {
     setPickerOpen(false)
   }
 
-  const handleRemoveSavedGif = (gifId: string) => {
-    if (removeGif(gifId)) {
-      showToast('Removed from My GIFs')
+  const handleToggleSaveGif = (gif: GifItem) => {
+    if (isSaved(gif.id)) {
+      if (removeGif(gif.id)) {
+        showToast('Removed from My GIFs')
+      }
+      return
     }
+
+    const result = saveGif(gif)
+
+    if (!result.saved) {
+      return
+    }
+
+    if (result.removedOldest) {
+      showToast('Library full, removed oldest GIF')
+      return
+    }
+
+    showToast('Saved to My GIFs')
   }
 
   return (
@@ -119,13 +135,14 @@ export function CommentComposer({ onPost }: CommentComposerProps) {
         <GifPicker
           activeTab={activeTab}
           catalog={seedGifCatalog}
+          isSaved={isSaved}
           savedGifs={savedGifs}
           searchQuery={searchQuery}
           selectedGifId={selectedGif?.id}
           onClose={() => setPickerOpen(false)}
-          onRemoveSavedGif={handleRemoveSavedGif}
           onSearchQueryChange={setSearchQuery}
           onSelectGif={(gif) => setSelectedGif(gif)}
+          onToggleSaveGif={handleToggleSaveGif}
           onTabChange={setActiveTab}
         />
       ) : null}

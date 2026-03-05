@@ -31,6 +31,26 @@ export function CommentItem({ comment }: CommentItemProps) {
   }
 
   const saved = isSaved(comment.gif.id)
+  const toggleSavedState = () => {
+    if (saved) {
+      if (removeGif(comment.gif!.id)) {
+        showToast('Removed from My GIFs')
+      }
+      return
+    }
+
+    const result = saveGif(comment.gif!)
+
+    if (!result.saved) {
+      return
+    }
+
+    showToast(
+      result.removedOldest
+        ? 'Library full, removed oldest GIF'
+        : 'Saved to My GIFs',
+    )
+  }
 
   return (
     <div className="group">
@@ -45,7 +65,24 @@ export function CommentItem({ comment }: CommentItemProps) {
           </p>
         </div>
 
-        <div className="relative shrink-0">
+        <div className="relative flex shrink-0 items-center gap-1.5">
+          <button
+            aria-label={
+              saved
+                ? `Remove ${comment.gif.title} from My GIFs`
+                : `Save ${comment.gif.title} to My GIFs`
+            }
+            className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold transition ${
+              saved
+                ? 'border-[#3b82f6] bg-[#13223a] text-[#7dc3ff] hover:bg-[#17304f]'
+                : 'border-[#3a3a3a] bg-[#121212] text-white hover:bg-[#1a1a1a]'
+            }`}
+            type="button"
+            onClick={toggleSavedState}
+          >
+            <BookmarkIcon className="h-3.5 w-3.5" filled={saved} />
+            {saved ? 'Saved' : 'Save'}
+          </button>
           <button
             ref={menuButtonRef}
             aria-expanded={menuOpen}
@@ -62,28 +99,12 @@ export function CommentItem({ comment }: CommentItemProps) {
               saved
                 ? {
                     label: 'Remove from My GIFs',
-                    onSelect: () => {
-                      if (removeGif(comment.gif!.id)) {
-                        showToast('Removed from My GIFs')
-                      }
-                    },
+                    onSelect: toggleSavedState,
                     destructive: true,
                   }
                 : {
                     label: 'Save GIF',
-                    onSelect: () => {
-                      const result = saveGif(comment.gif!)
-
-                      if (!result.saved) {
-                        return
-                      }
-
-                      showToast(
-                        result.removedOldest
-                          ? 'Library full, removed oldest GIF'
-                          : 'Saved to My GIFs',
-                      )
-                    },
+                    onSelect: toggleSavedState,
                   },
             ]}
             anchorRef={menuButtonRef}
