@@ -1,32 +1,58 @@
-export type GifItem = {
+export type GifSource = 'giphy' | 'internal'
+
+export type GifAsset = {
   id: string
   title: string
-  url: string
-  previewUrl?: string
-  source?: string
+  previewUrl: string
+  fullUrl: string
+  source: GifSource
+  aspectRatio?: number
 }
 
-export type CommentItem = {
+export type GifCollection = {
+  id: string
+  name: string
+  isDefault: boolean
+  createdAt: string
+}
+
+export type SavedGifRecord = {
+  gifId: string
+  collectionId: string
+  savedAt: string
+}
+
+export type SavedGifEntry = {
+  gif: GifAsset
+  record: SavedGifRecord
+}
+
+export type CommentAttachment = {
+  kind: 'gif'
+  gifId: string
+}
+
+export type CommentDraft = {
+  text: string
+  attachments: CommentAttachment[]
+}
+
+export type CommentRecord = {
   id: string
   author: string
   createdAt: string
-  type: 'text' | 'gif'
   text?: string
-  gif?: GifItem
+  attachments: CommentAttachment[]
 }
 
-export type SavedGifItem = GifItem & {
-  savedAt: number
-}
-
-export type PostItem = {
+export type PostRecord = {
   id: string
   author: string
   handle: string
   location?: string
   imageUrl: string
   caption: string
-  comments: CommentItem[]
+  comments: CommentRecord[]
 }
 
 export type StoryItem = {
@@ -42,20 +68,20 @@ export type ToastMessage = {
   tone?: 'default' | 'error'
 }
 
-export type SavedGifsContextValue = {
-  savedGifs: SavedGifItem[]
-  isSaved: (gifId: string) => boolean
-  saveGif: (gif: GifItem) => { removedOldest?: boolean; saved: boolean }
-  removeGif: (gifId: string) => boolean
-}
-
-export type SavedGifsProviderValue = SavedGifsContextValue & {
-  hydrationError: boolean
-}
-
-export type CommentDraft = {
-  text?: string
-  gif?: GifItem
-}
-
 export type GifPickerTab = 'search' | 'saved'
+
+export type GifSearchResult = {
+  items: GifAsset[]
+  nextCursor?: string
+}
+
+export type SavedLibraryState = {
+  collections: GifCollection[]
+  savedRecords: SavedGifRecord[]
+  activeCollectionId: string
+}
+
+export type FeedData = {
+  posts: PostRecord[]
+  stories: StoryItem[]
+}
